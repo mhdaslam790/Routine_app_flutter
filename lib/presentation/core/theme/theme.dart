@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/presentation/core/theme/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 mixin AppTheme {
   static ThemeData get dark => ThemeData.dark().copyWith();
   static ThemeData get light => ThemeData.light().copyWith(
         primaryColor: const Color(0xFF2A59C3),
         brightness: Brightness.dark,
-        textTheme: GoogleFonts.poppinsTextTheme(),
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
         primaryTextTheme: const TextTheme(

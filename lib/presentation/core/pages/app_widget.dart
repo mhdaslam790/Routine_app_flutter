@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_template/app_localizations.dart';
-import 'package:flutter_template/application/settings/settings_bloc.dart';
+import 'package:flutter_template/application/routine/routine_bloc.dart';
+
 import 'package:flutter_template/domain/core/constants.dart';
 import 'package:flutter_template/injection.dart';
 import 'package:flutter_template/presentation/core/theme/theme.dart';
@@ -18,40 +19,38 @@ class AppWidget extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) {
-            return getIt<SettingsBloc>();
+            return getIt<RoutineBloc>()
+              ..add(const RoutineEvent.getData())
+              ..add(RoutineEvent.setHeadingDate(date: DateTime.now()));
           },
         ),
       ],
-      child: LifecycleWatcher(
-        child: BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (context, state) {
-            return MaterialApp.router(
-              routerDelegate: _appRouter.delegate(),
-              routeInformationParser: _appRouter.defaultRouteParser(),
-              title: AppConstants.appName,
-              debugShowCheckedModeBanner: false,
-              themeMode: state.appThemeMode,
-              theme: AppTheme.light,
-              darkTheme: AppTheme.dark,
-              supportedLocales: AppConstants.supportedLocales,
-              locale: AppConstants.supportedLocales[0],
-              localizationsDelegates: const [
-                AppLocalizations.delegate,
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-              ],
-              localeResolutionCallback: (locale, supportedLocales) {
-                for (final supportedLocale in supportedLocales) {
-                  if (supportedLocale.languageCode == locale!.languageCode &&
-                      supportedLocale.countryCode == locale.countryCode) {
-                    return supportedLocale;
-                  }
+      child: BlocBuilder<RoutineBloc, RoutineState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            routerDelegate: _appRouter.delegate(),
+            routeInformationParser: _appRouter.defaultRouteParser(),
+            title: AppConstants.appName,
+            debugShowCheckedModeBanner: false,
+            themeMode: ThemeMode.light,
+            theme: ThemeData(fontFamily: 'Euclid Circular B'),
+            darkTheme: AppTheme.dark,
+            locale: AppConstants.supportedLocales[0],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+            ],
+            localeResolutionCallback: (locale, supportedLocales) {
+              for (final supportedLocale in supportedLocales) {
+                if (supportedLocale.languageCode == locale!.languageCode &&
+                    supportedLocale.countryCode == locale.countryCode) {
+                  return supportedLocale;
                 }
-                return supportedLocales.first;
-              },
-            );
-          },
-        ),
+              }
+              return supportedLocales.first;
+            },
+          );
+        },
       ),
     );
   }
